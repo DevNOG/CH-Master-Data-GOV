@@ -68,6 +68,8 @@
             border: 1px solid #ddd;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             transition: border-color 0.3s ease;
+            resize: none;
+            border: 2px solid #1403fc;
         }
 
         textarea:focus {
@@ -93,6 +95,7 @@
         /* Resultados */
         .results {
             margin-top: 30px;
+            margin-left: 22px;
             font-size: 18px;
             color: #333;
             display: none;
@@ -268,7 +271,7 @@
         </div>
 
         <!-- Botão de retorno à página inicial -->
-        <button id="home-btn">Página Inicial</button>
+        <button id="home-btn">Retornar</button>
 
     </main>
 
@@ -426,7 +429,7 @@
         // Função para redirecionar para a página inicial
         document.getElementById('home-btn').addEventListener('click', function () {
             window.location.href = 'Painel Seletor de Consulta.html'; 
-            // Caso deseje trocar, atualize 'index.html' para a URL desejada
+            // Caso deseje trocar, atualize 'Painel Seletor de Consulta.html' para a URL desejada
         });
 
     </script>
