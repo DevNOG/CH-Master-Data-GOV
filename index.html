@@ -34,26 +34,36 @@
             padding: 40px;
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 900px;
+            width: 100%;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
         }
 
         .button {
+            background-color: #007BFF;
+            color: #fff;
+            padding: 15px 30px;
             border: none;
-            cursor: pointer;
-            margin: 10px;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            display: inline-block;
-        }
-
-        .button img {
-            width: 150px;
-            height: auto;
             border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            transition: box-shadow 0.3s ease, transform 0.3s ease;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-decoration: none;
+            display: inline-block;
+            width: 180px;
+            text-align: center;
         }
 
-        .button img:hover {
-            transform: scale(1.25);
+        .button:hover {
+            background-color: #0056b3;
+            transform: scale(1.05);
             box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
         }
 
@@ -69,12 +79,14 @@
                 font-size: 36px;
             }
 
-            .button img {
-                width: 100px;
-            }
-
             .content {
                 padding: 20px;
+            }
+
+            .button {
+                font-size: 16px;
+                padding: 10px 20px;
+                width: 150px;
             }
         }
     </style>
@@ -82,21 +94,15 @@
 
 <body>
     <div class="content">
-        <img src="https://chmasterdata.com.br/wp-content/uploads/2024/06/ch.png" alt="Logo CH Master Data" width="850" height="415">
+        <img src="https://chmasterdata.com.br/wp-content/uploads/2024/06/ch.png" alt="Logo CH Master Data" width="700" height="415">
         <h1>Painel de Busca</h1>
 
-        <div>
-            <a href="Pesquisa Clientes.html" class="button">
-                <img id="img1" src="file:///C:/Users/Fernando%20Mendes/Downloads/C%20(1).png" alt="Clientes">
-            </a>
-
-            <a href="fornecedor.html" class="button">
-                <img id="img2" src="file:///C:/Users/Fernando%20Mendes/Pictures/Captura%20de%20tela%202024-10-22%20093717.png" alt="Fornecedor">
-            </a>
+        <div class="buttons">
+            <a href="Pesquisa Clientes.html" class="button">Clientes</a>
+            <a href="fornecedor.html" class="button">Fornecedores</a>
         </div>
     </div>
     <footer>
-        
         Idealização: Luiz Mageste e Fernando Mendes
     </footer>
 </body>
