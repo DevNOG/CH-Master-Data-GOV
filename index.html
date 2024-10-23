@@ -11,11 +11,9 @@
         body {
             background-color: #f0f4f8;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 35px;
-            padding: 0;
             display: flex;
             flex-direction: column;
-            min-height: 100vh;
+            min-height: 97vh;
             justify-content: center;
             align-items: center;
             text-align: center;
@@ -24,7 +22,7 @@
 
         h1 {
             font-family: 'Arial Black', sans-serif;
-            font-size: 48px;
+            font-size: 28px;
             margin-bottom: 20px;
             color: #007BFF;
         }
@@ -34,8 +32,15 @@
             padding: 40px;
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            max-width: 900px;
+            max-width: 45rem;
+            max-height: 40rem;
             width: 100%;
+        }
+
+        .img {
+            position: static;
+            width:650px;
+            height:330px;
         }
 
         .buttons {
@@ -57,7 +62,7 @@
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             text-decoration: none;
             display: inline-block;
-            width: 180px;
+            width: 150px;
             text-align: center;
         }
 
@@ -68,8 +73,8 @@
         }
 
         footer {
-            margin-top: auto;
-            padding: 20px;
+            position: static;
+            margin-top: 1rem;
             font-size: 14px;
             color: #555;
         }
@@ -89,12 +94,13 @@
                 width: 150px;
             }
         }
+        
     </style>
 </head>
 
 <body>
     <div class="content">
-        <img src="https://chmasterdata.com.br/wp-content/uploads/2024/06/ch.png" alt="Logo CH Master Data" width="600" height="415">
+        <img src="https://chmasterdata.com.br/wp-content/uploads/2024/06/ch.png" alt="Logo CH Master Data" class="img">
         <h1>Painel de Busca</h1>
 
         <div class="buttons">
@@ -102,9 +108,7 @@
             <a href="fornecedor.html" class="button">Fornecedores</a>
         </div>
     </div>
-    <footer>
-        Idealização: Luiz Mageste e Fernando Mendes
-    </footer>
+    <footer>Idealização: Luiz Mageste e Fernando Mendes</footer>
 </body>
 
 </html>
