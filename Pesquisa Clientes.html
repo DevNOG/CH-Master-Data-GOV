@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel de Consulta CNPJ e Nome Matriz</title>
+    <link rel="icon" href="https://chmasterdata.com.br/wp-content/uploads/2024/06/ch.png" type="image/png">
+    <style>
+        /* Estilos Globais */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        header {
+            background-color: #ffffff;
+            width: 100%;
+            padding: 20px 0;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        img {
+            max-width: 200px;
+            margin: 20px auto;
+        }
+
+        h1 {
+            font-size: 28px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        /* Estilizando o formulário */
+        .form-group {
+            margin: 20px 0;
+            text-align: left;
+            width: 80%;
+            max-width: 400px;
+        }
+
+        label {
+            font-size: 18px;
+            margin-bottom: 8px;
+            display: block;
+            color: #444;
+        }
+
+        textarea {
+            width: 100%;
+            height: 40px;
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 6px;
+            border: 1px solid #ddd;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: border-color 0.3s ease;
+        }
+
+        textarea:focus {
+            border-color: #007bff;
+        }
+
+        /* Botão */
+        #search-btn {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: background-color 0.3s ease;
+        }
+
+        #search-btn:hover {
+            background-color: #0056b3;
+        }
+
+        /* Resultados */
+        .results {
+            margin-top: 30px;
+            font-size: 18px;
+            color: #333;
+            display: none;
+            width: 80%;
+            max-width: 600px;
+            text-align: left;
+            border: 1px solid #ddd;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Botão do formulário */
+        #open-form-btn {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 6px;
+            position: fixed;
+            top: 60px;
+            right: 20px;
+            z-index: 1000;
+            transition: background-color 0.3s ease;
+        }
+
+        #open-form-btn:hover {
+            background-color: #218838;
+        }
+
+        /* Texto acima do botão */
+        .info-text {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            font-size: 14px;
+            color: #333;
+            text-align: right;
+        }
+
+        /* Estilos do modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 10% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 600px;
+            border-radius: 10px;
+        }
+
+        iframe {
+            width: 100%;
+            height: 500px;
+            border: none;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        /* Botão de voltar à página inicial */
+        #home-btn {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 6px;
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+            transition: background-color 0.3s ease;
+        }
+
+        #home-btn:hover {
+            background-color: #c82333;
+        }
+
+        /* Responsividade */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 24px;
+            }
+
+            label {
+                font-size: 16px;
+            }
+
+            textarea {
+                height: 35px;
+                font-size: 14px;
+            }
+
+            #search-btn,
+            #open-form-btn {
+                padding: 10px 20px;
+                font-size: 14px;
+            }
+
+            .modal-content {
+                width: 90%;
+            }
+
+            #open-form-btn {
+                right: 10px;
+                top: 50px;
+            }
+
+            .info-text {
+                right: 10px;
+                top: 10px;
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <img src="https://chmasterdata.com.br/wp-content/uploads/2024/06/ch.png" alt="Logo CH Master Data">
+        <h1>Painel de Consulta CNPJ e Nome Matriz</h1>
+    </header>
+
+    <main>
+        <div class="form-group">
+            <label for="cnpj">Raiz do CNPJ (8 primeiros dígitos, com pontuações)</label>
+            <textarea id="cnpj" name="S1" tabindex="1"></textarea>
+        </div>
+
+        <!-- Texto acima do botão de formulário -->
+        <div class="info-text">
+            <p>Deseja incluir alguma informação?</p>
+        </div>
+
+        <button id="search-btn">Buscar</button>
+
+        <div class="results" id="results-container">
+            <h3>Resultados:</h3>
+            <div id="results-content"></div>
+        </div>
+
+        <button id="open-form-btn">Abrir Formulário</button>
+
+        <!-- Botão de retorno à página inicial -->
+        <button id="home-btn">Página Inicial</button>
+
+    </main>
+
+    <!-- Modal para o formulário -->
+    <div id="formModal" class="modal">
+        <div class="modal-content">
+            <span class="close" id="closeModal">&times;</span>
+            <iframe src="https://forms.office.com/r/iEfNxE2gz2" title="Formulário Microsoft"></iframe>
+        </div>
+    </div>
+
+    <script>
+        // Base de dados simulada
+        const baseDeDados = [
+            { "CNPJ": "08.106.783", "Raiz CNPJ": "08.106.783/0004-47", "Nome Matriz": "A MARE MANSA COMERCIO DE MOVEIS E ELETRODOMESTICO LTDA", "Grupo Econômico": "A MARE MANSA COMERCIO DE MOVEIS E ELETRODOMESTICO LTDA" },
+            { "CNPJ": "83.646.984", "Raiz CNPJ": "83.646.984/0006-14", "Nome Matriz": "A. ANGELONI & CIA. LTDA", "Grupo Econômico": "A. ANGELONI & CIA. LTDA" },
+            { "CNPJ": "77.778.443", "Raiz CNPJ": "77.778.443/0001-32", "Nome Matriz": "ALMACENES MARIA", "Grupo Econômico": "ALMACENES MARIA" },
+            { "CNPJ": "33.050.071", "Raiz CNPJ": "33.050.071/0001-58", "Nome Matriz": "AMPLA ENERGIA E SERVIÇOS S.A.", "Grupo Econômico": "AMPLA ENERGIA E SERVIÇOS S.A." },
+            { "CNPJ": "10.207.975", "Raiz CNPJ": "00.296.549/0001-75", "Nome Matriz": "ANTONIO CAVALCANTI PEREIRA ME", "Grupo Econômico": "MILLENA COMERCIO VAREJISTA DE MOVEIS E ELETRO EIRELI" },
+            { "CNPJ": "23.439.441", "Raiz CNPJ": "03.995.515/0013-09", "Nome Matriz": "ARMAZEM MATEUS SA", "Grupo Econômico": "ARMAZEM MATEUS SA" },
+            { "CNPJ": "70.120.662", "Raiz CNPJ": "70.120.662/0001-80", "Nome Matriz": "ATACADAO DOS ELETRODOMESTICOS DO NORDESTE LTDA", "Grupo Econômico": "ATACADAO DOS ELETRODOMESTICOS DO NORDESTE LTDA" },
+            { "CNPJ": "04.565.289", "Raiz CNPJ": "04.565.289/0005-70", "Nome Matriz": "BEMOL S/A", "Grupo Econômico": "BEMOL S/A" },
+            { "CNPJ": "02.282.194", "Raiz CNPJ": "02.292.663/0001-52", "Nome Matriz": "BENEVIDES - MOVEIS E ELETRODOMESTICOS LTDA", "Grupo Econômico": "SANTA IZABEL - MOVEIS E ELETRODOMESTICOS LTDA" },
+            { "CNPJ": "87.296.026", "Raiz CNPJ": "87.296.026/0093-25", "Nome Matriz": "BENOIT ELETRODOMESTICOS LTDA", "Grupo Econômico": "BENOIT ELETRODOMESTICOS LTDA" },
+            { "CNPJ": "97.422.620", "Raiz CNPJ": "13.004.510/0258-40", "Nome Matriz": "BOMPRECO BAHIA SUPERMERCADOS LTDA", "Grupo Econômico": "BOMPRECO SUPERMERCADOS DO NORDESTE LTDA" },
+            { "CNPJ": "13.004.510", "Raiz CNPJ": "13.004.510/0258-40", "Nome Matriz": "BOMPRECO SUPERMERCADOS DO NORDESTE LTDA", "Grupo Econômico": "BOMPRECO SUPERMERCADOS DO NORDESTE LTDA" },
+            { "CNPJ": "77.777.972", "Raiz CNPJ": "77.777.972/0001-11", "Nome Matriz": "BRAVOS INTERNATIONAL LLC", "Grupo Econômico": "BRAVOS INTERNATIONAL LLC" },
+            { "CNPJ": "77.777.263", "Raiz CNPJ": "77.777.263/0001-36", "Nome Matriz": "CADENA DE TIENDAS TRD-CARIBE", "Grupo Econômico": "CADENA DE TIENDAS TRD-CARIBE" },
+            { "CNPJ": "08.439.087", "Raiz CNPJ": "08.439.087/0001-00", "Nome Matriz": "CAEL ATACADO EIRELI", "Grupo Econômico": "CAEL ATACADO EIRELI" },
+            { "CNPJ": "88.888.573", "Raiz CNPJ": "88.888.573/0001-44", "Nome Matriz": "CARLOS GUTIERREZ SA", "Grupo Econômico": "CARLOS GUTIERREZ SA" },
+            { "CNPJ": "45.543.915", "Raiz CNPJ": "45.543.915/0075-18", "Nome Matriz": "CARREFOUR COMERCIO E INDUSTRIA LTDA", "Grupo Econômico": "CARREFOUR COMERCIO E INDUSTRIA LTDA" },
+            { "CNPJ": "01.543.032", "Raiz CNPJ": "01.543.032/0001-04", "Nome Matriz": "CELG DISTRIBUICAO S.A. - CELG D", "Grupo Econômico": "CELG DISTRIBUICAO S.A. - CELG D" },
+            { "CNPJ": "39.346.861", "Raiz CNPJ": "39.346.861/0001-61", "Nome Matriz": "CENCOSUD BRASIL COMERCIAL S.A.", "Grupo Econômico": "CENCOSUD BRASIL COMERCIAL S.A." },
+            { "CNPJ": "06.862.627", "Raiz CNPJ": "06.862.627/0001-38", "Nome Matriz": "CLAUDINO S A LOJAS DE DEPARTAMENTOS", "Grupo Econômico": "CLAUDINO S A LOJAS DE DEPARTAMENTOS" },
+            { "CNPJ": "44.444.610", "Raiz CNPJ": "44.444.610/0001-50", "Nome Matriz": "COMPAGNIE FRANCAISE DE ETUDES", "Grupo Econômico": "COMPAGNIE FRANCAISE DE ETUDES" },
+            { "CNPJ": "47.508.411", "Raiz CNPJ": "47.508.411/0078-35", "Nome Matriz": "COMPANHIA BRASILEIRA DE DISTRIBUICAO", "Grupo Econômico": "COMPANHIA BRASILEIRA DE DISTRIBUICAO" },
+            { "CNPJ": "07.047.251", "Raiz CNPJ": "07.047.251/0001-70", "Nome Matriz": "COMPANHIA ENERGETICA DO CEARA", "Grupo Econômico": "COMPANHIA ENERGETICA DO CEARA" },
+            { "CNPJ": "02.282.152", "Raiz CNPJ": "02.292.663/0001-52", "Nome Matriz": "CONCORDIA - MOVEIS E ELETRODOMESTICOS LTDA", "Grupo Econômico": "SANTA IZABEL - MOVEIS E ELETRODOMESTICOS LTDA" },
+            { "CNPJ": "57.508.426", "Raiz CNPJ": "57.508.426/0001-78", "Nome Matriz": "COOP - COOPERATIVA DE CONSUMO", "Grupo Econômico": "COOP - COOPERATIVA DE CONSUMO" },
+            { "CNPJ": "77.777.316", "Raiz CNPJ": "77.777.316/0001-19", "Nome Matriz": "COVIFED SARL", "Grupo Econômico": "COVIFED SARL" },
+            { "CNPJ": "09.930.165", "Raiz CNPJ": "09.930.165/0013-70", "Nome Matriz": "CREDIMOVEIS NOVOLAR LTDA EM RECUPERACAO JUDICIAL", "Grupo Econômico": "CREDIMOVEIS NOVOLAR LTDA" },
+            { "CNPJ": "72.456.809", "Raiz CNPJ": "72.456.809/0001-33", "Nome Matriz": "CYBELAR COMERCIO E INDUSTRIA LTDA", "Grupo Econômico": "CYBELAR COMERCIO E INDUSTRIA LTDA" },
+            { "CNPJ": "32.951.535", "Raiz CNPJ": "32.951.535/0001-34", "Nome Matriz": "ELETROMAR MOVEIS E ELETRODOMESTICOS LTDA", "Grupo Econômico": "ELETROMAR MOVEIS E ELETRODOMESTICOS LTDA" },
+            { "CNPJ": "04.065.033", "Raiz CNPJ": "04.065.033/0001-70", "Nome Matriz": "ENERGISA ACRE - DISTRIBUIDORA DE ENERGIA S.A", "Grupo Econômico": "ENERGISA ACRE - DISTRIBUIDORA DE ENERGIA S.A" },
+            { "CNPJ": "08.826.596", "Raiz CNPJ": "08.826.596/0001-95", "Nome Matriz": "ENERGISA BORBOREMA - DISTRIBUIDORA DE ENERGIA S.A", "Grupo Econômico": "ENERGISA BORBOREMA - DISTRIBUIDORA DE ENERGIA S.A" },
+            { "CNPJ": "03.467.321", "Raiz CNPJ": "03.467.321/0001-99", "Nome Matriz": "ENERGISA MATO GROSSO - DISTRIBUIDORA DE ENERGIA S.A.", "Grupo Econômico": "ENERGISA MATO GROSSO - DISTRIBUIDORA DE ENERGIA S.A." },
+            { "CNPJ": "15.413.826", "Raiz CNPJ": "15.413.826/0001-50", "Nome Matriz": "ENERGISA MATO GROSSO DO SUL - DISTRIBUIDORA DE ENERGIA S.A.", "Grupo Econômico": "ENERGISA MATO GROSSO DO SUL - DISTRIBUIDORA DE ENERGIA S.A." },
+            { "CNPJ": "19.527.639", "Raiz CNPJ": "19.527.639/0001-58", "Nome Matriz": "ENERGISA MINAS GERAIS - DISTRIBUIDORA DE ENERGIA S.A.", "Grupo Econômico": "ENERGISA MINAS GERAIS - DISTRIBUIDORA DE ENERGIA S.A." },
+            { "CNPJ": "09.095.183", "Raiz CNPJ": "09.095.183/0001-40", "Nome Matriz": "ENERGISA PARAIBA - DISTRIBUIDORA DE ENERGIA S.A", "Grupo Econômico": "ENERGISA PARAIBA - DISTRIBUIDORA DE ENERGIA S.A" },
+            { "CNPJ": "05.914.650", "Raiz CNPJ": "05.914.650/0001-66", "Nome Matriz": "ENERGISA RONDONIA - DISTRIBUIDORA DE ENERGIA S.A", "Grupo Econômico": "ENERGISA RONDONIA DISTRIBUIDORA DE ENERGIA S.A" },
+            { "CNPJ": "13.017.462", "Raiz CNPJ": "13.017.462/0001-63", "Nome Matriz": "ENERGISA SERGIPE - DISTRIBUIDORA DE ENERGIA S.A", "Grupo Econômico": "ENERGISA SERGIPE - DISTRIBUIDORA DE ENERGIA S.A" },
+            { "CNPJ": "25.086.034", "Raiz CNPJ": "25.086.034/0001-71", "Nome Matriz": "ENERGISA TOCANTINS DISTRIBUIDORA DE ENERGIA S.A.", "Grupo Econômico": "ENERGISA TOCANTINS DISTRIBUIDORA DE ENERGIA S.A." },
+            { "CNPJ": "24.867.555", "Raiz CNPJ": "24.867.555/0002-84", "Nome Matriz": "ENGAGE ELETRO COMERCIO EIRELI", "Grupo Econômico": "ENGAGE ELETRO COMERCIO EIRELI" },
+            { "CNPJ": "06.272.793", "Raiz CNPJ": "06.272.793/0001-84", "Nome Matriz": "EQUATORIAL MARANHAO DISTRIBUIDORA DE ENERGIA S.A", "Grupo Econômico": "EQUATORIAL MARANHAO DISTRIBUIDORA DE ENERGIA S.A" },
+            { "CNPJ": "04.895.728", "Raiz CNPJ": "04.895.728/0001-80", "Nome Matriz": "EQUATORIAL PARA DISTRIBUIDORA DE ENERGIA SA", "Grupo Econômico": "EQUATORIAL PARA DISTRIBUIDORA DE ENERGIA S.A." },
+            { "CNPJ": "86.184.074", "Raiz CNPJ": "86.184.074/0018-99", "Nome Matriz": "EUGENIO RAULINO KOERICH SA COMERCIO E INDUSTRIA", "Grupo Econômico": "EUGENIO RAULINO KOERICH SA COMERCIO E INDUSTRIA" },
+            { "CNPJ": "10.230.480", "Raiz CNPJ": "10.230.480/0001-30", "Nome Matriz": "FERREIRA COSTA & CIA LTDA", "Grupo Econômico": "FERREIRA COSTA & CIA LTDA" },
+            { "CNPJ": "88.011.476", "Raiz CNPJ": "88.011.476/0001-79", "Nome Matriz": "GABRIELA AMANDA MENDEZ GARCIA", "Grupo Econômico": "GABRIELA AMANDA MENDEZ GARCIA" },
+            { "CNPJ": "22.962.737", "Raiz CNPJ": "77.941.490/0001-55", "Nome Matriz": "GAZIN ATACADO CENTRO-OESTE LTDA", "Grupo Econômico": "GAZIN INDUSTRIA E COMERCIO DE MOVEIS E ELETRODOMESTICOS LTDA" },
+            { "CNPJ": "77.941.490", "Raiz CNPJ": "77.941.490/0001-55", "Nome Matriz": "GAZIN INDUSTRIA E COMERCIO DE MOVEIS E ELETRODOMESTICOS LTDA", "Grupo Econômico": "GAZIN INDUSTRIA E COMERCIO DE MOVEIS E ELETRODOMESTICOS LTDA" },
+            { "CNPJ": "13.759.146", "Raiz CNPJ": "77.941.490/0001-55", "Nome Matriz": "GAZIN INFORMATICA LTDA", "Grupo Econômico": "GAZIN INDUSTRIA E COMERCIO DE MOVEIS E ELETRODOMESTICOS LTDA" },
+            { "CNPJ": "83.648.477", "Raiz CNPJ": "83.648.477/0001-05", "Nome Matriz": "GIASSI & CIA LTDA", "Grupo Econômico": "GIASSI & CIA LTDA" },
+            { "CNPJ": "79.379.491", "Raiz CNPJ": "79.379.491/0001-83", "Nome Matriz": "HAVAN S.A.", "Grupo Econômico": "HAVAN S.A." },
+            { "CNPJ": "27.936.211", "Raiz CNPJ": "27.936.211/0002-78", "Nome Matriz": "IMPERIO MOVEIS E ELETRO S.A", "Grupo Econômico": "IMPERIO MOVEIS E ELETRO S.A" },
+            { "CNPJ": "04.561.957", "Raiz CNPJ": "04.561.957/0001-68", "Nome Matriz": "IMPORTADORA TV LAR LTDA", "Grupo Econômico": "IMPORTADORA TV LAR LTDA" },
+            { "CNPJ": "41.426.966", "Raiz CNPJ": "41.426.966/0001-72", "Nome Matriz": "J ALVES E OLIVEIRA LTDA", "Grupo Econômico": "J ALVES E OLIVEIRA LTDA" },
+            { "CNPJ": "54.289.996", "Raiz CNPJ": "54.289.996/0010-17", "Nome Matriz": "J MAHFUZ LTDA", "Grupo Econômico": "J MAHFUZ LTDA" },
+            { "CNPJ": "05.054.671", "Raiz CNPJ": "05.054.671/0001-59", "Nome Matriz": "LIDER COMERCIO E INDUSTRIA LTDA.", "Grupo Econômico": "LIDER COMERCIO E INDUSTRIA LTDA." },
+            { "CNPJ": "60.444.437", "Raiz CNPJ": "60.444.437/0001-46", "Nome Matriz": "LIGHT SERVICOS DE ELETRICIDADE S A", "Grupo Econômico": "LIGHT SERVICOS DE ELETRICIDADE SA" },
+            { "CNPJ": "56.642.960", "Raiz CNPJ": "56.642.960/0001-00", "Nome Matriz": "LOJAS CEM SA", "Grupo Econômico": "LOJAS CEM SA" },
+            { "CNPJ": "89.848.543", "Raiz CNPJ": "89.848.543/0001-77", "Nome Matriz": "LOJAS COLOMBO SA COMERCIO DE UTILIDADES DOMESTICAS", "Grupo Econômico": "LOJAS COLOMBO SA COMERCIO DE UTILIDADES DOMESTICAS" },
+            { "CNPJ": "31.743.818", "Raiz CNPJ": "31.743.818/0001-28", "Nome Matriz": "LOJAS SIMONETTI LTDA", "Grupo Econômico": "LOJAS SIMONETTI LTDA" },
+            { "CNPJ": "30.689.848", "Raiz CNPJ": "30.689.848/0001-30", "Nome Matriz": "LOJAS SIPOLATTI COMERCIO E SERVICOS LTDA", "Grupo Econômico": "LOJAS SIPOLATTI COMERCIO E SERVICOS LTDA" },
+            { "CNPJ": "66.666.884", "Raiz CNPJ": "66.666.884/0001-26", "Nome Matriz": "LUXSAM INDUSTRIES LIMITED", "Grupo Econômico": "LUXSAM INDUSTRIES LIMITED" },
+            { "CNPJ": "11.590.296", "Raiz CNPJ": "11.590.296/0002-45", "Nome Matriz": "MAGAZINE LILIANI S/A", "Grupo Econômico": "MAGAZINE LILIANI S/A" },
+            { "CNPJ": "47.960.950", "Raiz CNPJ": "47.960.950/0001-21", "Nome Matriz": "MAGAZINE LUIZA S/A", "Grupo Econômico": "MAGAZINE LUIZA S/A" },
+            { "CNPJ": "43.214.055", "Raiz CNPJ": "43.214.055/0001-07", "Nome Matriz": "MARTINS COMERCIO E SERVICOS DE DISTRIBUICAO S/A", "Grupo Econômico": "MARTINS COMERCIO E SERVICOS DE DISTRIBUICAO S/A" },
+            { "CNPJ": "40.841.728", "Raiz CNPJ": "40.841.728/0005-94", "Nome Matriz": "MASTER ELETRONICA DE BRINQUEDOS LTDA", "Grupo Econômico": "MASTER ELETRONICA DE BRINQUEDOS LTDA" },
+            { "CNPJ": "00.296.549", "Raiz CNPJ": "00.296.549/0001-75", "Nome Matriz": "MILLENA COMERCIO VAREJISTA DE MOVEIS E ELETRO EIRELI", "Grupo Econômico": "MILLENA COMERCIO VAREJISTA DE MOVEIS E ELETRO EIRELI" },
+            { "CNPJ": "03.341.024", "Raiz CNPJ": "03.341.024/0001-00", "Nome Matriz": "MIR IMPORTACAO E EXPORTACAO LTDA", "Grupo Econômico": "MIR IMPORTACAO E EXPORTACAO LTDA" },
+            { "CNPJ": "08.995.631", "Raiz CNPJ": "08.995.631/0002-80", "Nome Matriz": "N CLAUDINO & CIA LTDA", "Grupo Econômico": "N CLAUDINO & CIA LTDA" },
+            { "CNPJ": "06.980.064", "Raiz CNPJ": "06.980.064/0001-82", "Nome Matriz": "NACIONAL GAS BUTANO DISTRIBUIDORA LTDA", "Grupo Econômico": "NACIONAL GAS BUTANO DISTRIBUIDORA LTDA" },
+            { "CNPJ": "55.555.536", "Raiz CNPJ": "55.555.536/0001-65", "Nome Matriz": "NORTRADE INTERNACIONAL", "Grupo Econômico": "NOR TRADE INTERNACIONAL" },
+            { "CNPJ": "13.530.973", "Raiz CNPJ": "01.534.080/0097-70", "Nome Matriz": "NOVO MUNDO AMAZONIA MOVEIS E UTILIDADES LTDA", "Grupo Econômico": "NOVO MUNDO MOVEIS E UTILIDADES LTDA" },
+            { "CNPJ": "01.534.080", "Raiz CNPJ": "01.534.080/0097-70", "Nome Matriz": "NOVO MUNDO MOVEIS E UTILIDADES LTDA", "Grupo Econômico": "NOVO MUNDO MOVEIS E UTILIDADES LTDA" },
+            { "CNPJ": "05.840.319", "Raiz CNPJ": "06.980.064/0001-82", "Nome Matriz": "PARAGAS DISTRIBUIDORA LTDA", "Grupo Econômico": "NACIONAL GAS BUTANO DISTRIBUIDORA LTDA" },
+            { "CNPJ": "07.105.743", "Raiz CNPJ": "07.105.743/0016-51", "Nome Matriz": "POLO DO ELETRO COMERCIAL DE MOVEIS LTDA", "Grupo Econômico": "POLO DO ELETRO COMERCIAL DE MOVEIS LTDA" },
+            { "CNPJ": "05.168.611", "Raiz CNPJ": "07.105.743/0016-51", "Nome Matriz": "PONTO DA ECONOMIA LTDA", "Grupo Econômico": "POLO DO ELETRO COMERCIAL DE MOVEIS LTDA" },
+            { "CNPJ": "33.333.899", "Raiz CNPJ": "33.333.899/0001-13", "Nome Matriz": "PRECISION TRADING CORP", "Grupo Econômico": "PRECISION TRADING CORP" },
+            { "CNPJ": "13.850.516", "Raiz CNPJ": "13.850.516/0009-24", "Nome Matriz": "RAMIRO CAMPELO COMERCIO DE UTILIDADES LTDA", "Grupo Econômico": "RAMIRO CAMPELO COMERCIO DE UTILIDADES LTDA" },
+            { "CNPJ": "13.481.309", "Raiz CNPJ": "13.481.309/0156-29", "Nome Matriz": "RN COMERCIO VAREJISTA S.A", "Grupo Econômico": "RN COMERCIO VAREJISTA S.A" },
+            { "CNPJ": "77.777.101", "Raiz CNPJ": "77.777.101/0001-06", "Nome Matriz": "ROSVANIA  S.R.L.", "Grupo Econômico": "ROSVANIA  S.R.L." },
+            { "CNPJ": "02.292.663", "Raiz CNPJ": "02.292.663/0001-52", "Nome Matriz": "SANTA IZABEL - MOVEIS E ELETRODOMESTICOS LTDA", "Grupo Econômico": "SANTA IZABEL - MOVEIS E ELETRODOMESTICOS LTDA" },
+            { "CNPJ": "23.708.712", "Raiz CNPJ": "23.708.712/0002-46", "Nome Matriz": "SOLAR MAGAZINE LTDA", "Grupo Econômico": "SOLAR MAGAZINE LTDA" },
+            { "CNPJ": "17.359.233", "Raiz CNPJ": "17.359.233/0001-88", "Nome Matriz": "TECIDOS E ARMARINHOS MIGUEL BARTOLOMEU SA", "Grupo Econômico": "TECIDOS E ARMARINHOS MIGUEL BARTOLOMEU SA" },
+            { "CNPJ": "02.280.707", "Raiz CNPJ": "02.292.663/0001-52", "Nome Matriz": "TOME-ACU - MOVEIS E ELETRODOMESTICOS LTDA", "Grupo Econômico": "SANTA IZABEL - MOVEIS E ELETRODOMESTICOS LTDA" },
+            { "CNPJ": "77.777.963", "Raiz CNPJ": "77.777.963/0001-20", "Nome Matriz": "TRIPLY LLC", "Grupo Econômico": "TRIPLY LLC" },
+            { "CNPJ": "33.041.260", "Raiz CNPJ": "33.041.260/0652-90", "Nome Matriz": "VIA VAREJO S/A", "Grupo Econômico": "VIA VAREJO S/A" },
+            { "CNPJ": "04.895.751", "Raiz CNPJ": "04.895.751/0001-74", "Nome Matriz": "Y YAMADA SA COMERCIO E INDUSTRIA", "Grupo Econômico": "Y YAMADA SA COMERCIO E INDUSTRIA" },
+            { "CNPJ": "04.928.297", "Raiz CNPJ": "07.196.033/0025-75", "Nome Matriz": "COMPAR CIA PARAENSE DE REFRIGERANTE", "Grupo Econômico": "NORSA REFRIGERANTES S.A" },
+            { "CNPJ": "07.196.033", "Raiz CNPJ": "07.196.033/0025-75", "Nome Matriz": "NORSA REFRIGERANTES S/A", "Grupo Econômico": "NORSA REFRIGERANTES S.A" },
+            { "CNPJ": "08.715.757", "Raiz CNPJ": "07.196.033/0025-75", "Nome Matriz": "REFRESCOS GUARARAPES LTDA", "Grupo Econômico": "NORSA REFRIGERANTES S.A" },
+            { "CNPJ": "15.887.193", "Raiz CNPJ": "07.196.033/0025-75", "Nome Matriz": "BENEVIDES AGUAS S/A", "Grupo Econômico": "NORSA REFRIGERANTES S.A" },
+            { "CNPJ": "34.590.315", "Raiz CNPJ": "07.196.033/0025-75", "Nome Matriz": "BRASIL NORTE BEBIDAS S/A", "Grupo Econômico": "NORSA REFRIGERANTES S.A" }
+            
+        ];
+        
+        function buscarCNPJ() {
+            const cnpjInput = document.getElementById('cnpj').value.trim();
+            const resultado = baseDeDados.find(item => item.CNPJ === cnpjInput);
+
+            const resultsContainer = document.getElementById('results-container');
+            const resultsContent = document.getElementById('results-content');
+
+            if (resultado) {
+                let html = `<ul>
+                                <li><strong>Raiz CNPJ:</strong> ${resultado.CNPJ}<br>
+                                <strong>CNPJ:</strong> ${resultado["Raiz CNPJ"]}<br>
+                                <strong>Nome Matriz:</strong> ${resultado["Nome Matriz"]}<br>
+                                <strong>Grupo Econômico:</strong> ${resultado["Grupo Econômico"]}</li>
+                            </ul>`;
+                resultsContent.innerHTML = html;
+                resultsContainer.style.display = 'block';
+            } else {
+                resultsContent.innerHTML = '<p>CNPJ não encontrado.</p>';
+                resultsContainer.style.display = 'block';
+            }
+        }
+    
+
+        // Adicionando evento ao botão
+        document.getElementById('search-btn').addEventListener('click', buscarCNPJ);
+
+        // Abrir o modal ao clicar no botão "Abrir Formulário"
+        const modal = document.getElementById("formModal");
+        const openFormBtn = document.getElementById("open-form-btn");
+        const closeModalBtn = document.getElementById("closeModal");
+
+        openFormBtn.onclick = function () {
+            modal.style.display = "block";
+        }
+
+        // Fechar o modal ao clicar no "X"
+        closeModalBtn.onclick = function () {
+            modal.style.display = "none";
+        }
+
+        // Fechar o modal ao clicar fora dele
+        window.onclick = function (event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+
+        // Função para redirecionar para a página inicial
+        document.getElementById('home-btn').addEventListener('click', function () {
+            window.location.href = 'Painel de Busca.html'; 
+            // Caso deseje trocar, atualize 'Painel de Busca.html' para a URL desejada
+        });
+
+    </script>
+
+</body>
+
+</html>
