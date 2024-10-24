@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel de Consulta CNPJ e Nome Matriz</title>
+    <link rel="icon" href="https://chmasterdata.com.br/wp-content/uploads/2024/06/ch.png" type="image/png">
+    <style>
+        /* Estilos Globais */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        header {
+            background-color: #ffffff;
+            width: 100%;
+            padding: 20px 0;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        img {
+            max-width: 200px;
+            margin: 20px auto;
+        }
+
+        h1 {
+            font-size: 28px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        /* Estilizando o formulário */
+        .form-group textarea {
+            margin: 20px 0;
+            text-align: left;
+            width: 80%;
+            max-width: 400px;
+            
+        }
+        
+        .form-group label{
+            margin-top: 10px;
+        }
+
+        label {
+            font-weight: bold;
+            font-size: 18px;
+            margin-bottom: 8px;
+            display: block;
+            color: #444;
+        }
+
+        textarea {
+            width: 100%;
+            height: 40px;
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 6px;
+            border: 1px solid #ddd;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: border-color 0.3s ease;
+            resize: none;
+            border: 2px solid #1403fc;
+        }
+
+        textarea:focus {
+            border-color: #007bff;
+        }
+
+        /* Botão */
+        #search-btn {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: background-color 0.3s ease;
+        }
+
+        #search-btn:hover {
+            background-color: #0056b3;
+        }
+
+        /* Resultados */
+        .results {
+            margin-top: 30px;
+            margin-left: 22px;
+            font-size: 18px;
+            color: #333;
+            display: none;
+            width: 80%;
+            max-width: 600px;
+            text-align: left;
+            border: 1px solid #ddd;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Botão do formulário */
+        #open-form-btn {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 6px;
+            position: fixed;
+            top: 60px;
+            right: 20px;
+            z-index: 1000;
+            transition: background-color 0.3s ease;
+        }
+
+        #open-form-btn:hover {
+            background-color: #218838;
+        }
+
+        /* Texto acima do botão */
+        .info-text {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            font-size: 14px;
+            color: #333;
+            text-align: right;
+        }
+
+        /* Estilos do modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 10% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 600px;
+            border-radius: 10px;
+        }
+
+        iframe {
+            width: 100%;
+            height: 500px;
+            border: none;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        /* Botão de voltar à página inicial */
+        #home-btn {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 6px;
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+            transition: background-color 0.3s ease;
+        }
+
+        #home-btn:hover {
+            background-color: #c82333;
+        }
+
+        .info-text button{
+            margin-right: 20px;
+        }
+
+        /* Responsividade */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 24px;
+            }
+
+            label {
+                font-size: 16px;
+            }
+
+            textarea {
+                height: 35px;
+                font-size: 14px;
+            }
+
+            #search-btn,
+            #open-form-btn {
+                padding: 10px 20px;
+                font-size: 14px;
+            }
+
+            .modal-content {
+                width: 90%;
+            }
+
+            #open-form-btn {
+                right: 10px;
+                top: 50px;
+            }
+
+            .info-text {
+                right: 10px;
+                top: 10px;
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <img src="https://chmasterdata.com.br/wp-content/uploads/2024/06/ch.png" alt="Logo CH Master Data">
+        <h1>Consulta Grande Rede</h1>
+    </header>
+
+    <main>
+        <div class="form-group">
+            <label for="cnpj">Cliente (Nome Completo)</label>
+            <textarea id="cnpj" name="S1" tabindex="1"></textarea>
+        </div>
+
+        <!-- Texto acima do botão de formulário -->
+        <div class="info-text">
+            <p>Deseja incluir alguma informação?</p>
+            <button id="open-form-btn">Abrir Formulário</button>
+        </div>
+
+        <button id="search-btn">Buscar</button>
+
+        <div class="results" id="results-container">
+            
+            <div id="results-content"></div>
+        </div>
+
+        <!-- Botão de retorno à página inicial -->
+        <button id="home-btn">Retornar</button>
+
+    </main>
+
+    <!-- Modal para o formulário -->
+    <div id="formModal" class="modal">
+        <div class="modal-content">
+            <span class="close" id="closeModal">&times;</span>
+            <iframe src="https://forms.office.com/r/iEfNxE2gz2" title="Formulário Microsoft"></iframe>
+        </div>
+    </div>
+
+    <script>
+        // Base de dados simulada
+        const baseDeDados = [
+
+            { "Nome": "A ANGELONI", "Situação": "MINALBA BRASIL CLIENTE" },
+            { "Nome": "AMBEV S.A.", "Situação": "MINALBA BRASIL CLIENTE" },
+            { "Nome": "AMERICANAS S/A", "Situação": "ESMALTEC CLIENTE - NÃO É MAIS GRANDE REDE - CASO VENHA COM ESSA CONFIGURAÇÃO, ENCAMINHAR E-MAIL AO GEQ E AGUARDAR." },
+            { "Nome": "AMERICANAS S/A", "Situação": "MINALBA BRASIL CLIENTE - NÃO É MAIS GRANDE REDE - CASO VENHA COM ESSA CONFIGURAÇÃO, ENCAMINHAR E-MAIL AO GEQ E AGUARDAR." },
+            { "Nome": "ARMAZEM MATEUS SA", "Situação": "MINALBA BRASIL CLIENTE" },
+            { "Nome": "ATACADÃO", "Situação": "MINALBA BRASIL CLIENTE" },
+            { "Nome": "ATAKAREJO GRUPO PÃO DE AÇÚCAR (COMPANHIA BRASILEIRA DE DISTRIBUIÇÃO)", "Situação": "MINALBA BRASIL CLIENTE" },
+            { "Nome": "BENOIT ELETRODOMESTICOS LTDA", "Situação": "ESMALTEC CLIENTE" },
+            { "Nome": "BOMPRECO BAHIA SUPERMERCADOS LTDA", "Situação": "MINALBA BRASIL CLIENTE" },
+            { "Nome": "CARREFOUR COMERCIO E INDUSTRIA LTDA", "Situação": "MINALBA BRASIL CLIENTE" },
+            { "Nome": "CENCOSUD (G BARBOSA, PERINI, PREZUNIC, BRETAS)", "Situação": "MINALBA BRASIL CLIENTE" },
+            { "Nome": "CENCOSUD BRASIL COMERCIAL SA", "Situação": "SISTEMA VERDES MARES" },
+            { "Nome": "COMERCIAL ZARAGOZA IMPORTACAO E EXPORTACAO LIMITADA", "Situação": "MINALBA BRASIL CLIENTE" },
+            { "Nome": "CRBS S/A", "Situação": "MINALBA BRASIL CLIENTE" },
+            { "Nome": "CYBELAR COMERCIO E INDUSTRIA LTDA", "Situação": "ESMALTEC CLIENTE" },
+            { "Nome": "DAVO SUPERMERCADOS LTDA", "Situação": "MINALBA BRASIL CLIENTE" },
+            { "Nome": "DIAS PASTORINHO S A COMERCIO E INDUSTRIA", "Situação": "MINALBA BRASIL CLIENTE" },
+            { "Nome": "DMA DISTRIBUIDORA SA", "Situação": "MINALBA BRASIL CLIENTE" },
+            { "Nome": "GIGA BR DISTRIBUIDOR E ATACADISTA LTDA", "Situação": "MINALBA BRASIL CLIENTE" },
+            { "Nome": "IMPERIO MOVEIS E ELETRO SA", "Situação": "ESMALTEC CLIENTE" },
+            { "Nome": "J ALVES E OLIVEIRA LTDA", "Situação": "ESMALTEC CLIENTE" },
+            { "Nome": "LOJA CEM", "Situação": "ESMALTEC CLIENTE" },
+            { "Nome": "MAGAZINE LILIANI S/A", "Situação": "ESMALTEC CLIENTE" },
+            { "Nome": "MAGAZINE LUIZA SA", "Situação": "ESMALTEC CLIENTE" },
+            { "Nome ": "MAKRO", "Situação": "MINALBA BRASIL CLIENTE" },
+            { "Nome": "MASTER ELETRONICA DE BRINQUEDOS LTDA", "Situação": "ESMALTEC CLIENTE" },
+            { "Nome": "MATEUS SUPERMERCADOS SA", "Situação": "MINALBA BRASIL CLIENTE" },
+            { "Nome": "MERCADAO ATACADISTA COMERCIAL DE ALIMENTOS LTDA", "Situação": "MINALBA BRASIL CLIENTE" },
+            { "Nome": "MERCANTIL RODRIGUES", "Situação": "MINALBA BRASIL CLIENTE" },
+            { "Nome": "MILLENA COMERCIO VAREJISTA DE MOVEIS E ELETRO EIRELI", "Situação": "ESMALTEC CLIENTE" },
+            { "Nome": "N CLAUDINO E CIA LTDA", "Situação": "ESMALTEC CLIENTE" },
+            { "Nome": "PERINI COMERCIAL DE ALIMENTOS LTDA", "Situação": "MINALBA BRASIL CLIENTE" },
+            { "Nome": "POLO DO ELETRO COMERCIAL DE MOVEIS LTDA", "Situação": "ESMALTEC CLIENTE" },
+            { "Nome": "SAPORE S.A", "Situação": "MINALBA BRASIL CLIENTE" },
+            { "Nome": "SENDAS (ASSAI)", "Situação": "MINALBA BRASIL CLIENTE" },
+            { "Nome": "SODEXO DO BRASIL COMERCIAL S.A.", "Situação": "MINALBA BRASIL CLIENTE" },
+            { "Nome": "SUPERMERCADO HIROTA LTDA", "Situação": "MINALBA BRASIL CLIENTE" },
+            { "Nome": "SUPERMERCADO NORDESTAO LTDA", "Situação": "MINALBA BRASIL CLIENTE" },
+            { "Nome": "SUPERMERCADOS MAMBO LTDA", "Situação": "MINALBA BRASIL CLIENTE" },
+            { "Nome": "TENDA ATACADO SA", "Situação": "MINALBA BRASIL CLIENTE" },
+            { "Nome": "VIA SA", "Situação": "MINALBA BRASIL CLIENTE" },
+            { "Nome": "WALMART (SAMS CLUB)", "Situação": "MINALBA BRASIL CLIENTE" },
+            { "Nome": "WEBFONES COMERCIO DE ARTIGOS DE TELEFONIA LTDA", "Situação": "MINALBA BRASIL CLIENTE" },
+            { "Nome": "WMB SUPERMERCADOS DO BRASIL LTDA", "Situação": "MINALBA BRASIL CLIENTE" },
+            { "Nome": "WMS (MAXXI)", "Situação": "MINALBA BRASIL CLIENTE" },
+            { "Nome": "WMS SUPERMERCADOS DO BRASIL LTDA", "Situação": "MINALBA BRASIL CLIENTE e SISTEMA VERDES MARES" },
+            { "Nome": "COMPANHIA BRASILEIRA DE DISTRUIÇÃO", "Situação": "MINALBA BRASIL CLIENTE, ESMALTEC CLIENTE, SISTEMA VERDES MARES, NACIONAL GÁS CLIENTE, ESPERANÇA e QUEPAR"},
+            { "Nome": "COMERCIAL ZAFFARI LTDA", "Situação": "MINALBA BRASIL CLIENTE" },
+            { "Nome": "CARREFOUR", "Situação": "SISTEMA VERDES MARES" },
+            { "Nome": "CENCOSUD BRASIL COMERCIAL SA", "Situação": "ESMALTEC CLIENTE" },
+            { "Nome": "MIR IMPORTACAO E EXPORTACAO LTDA", "Situação": "ESMALTEC CLIENTE" },
+            { "Nome": "AMBEV S.A.", "Situação": "SISTEMA VERDES MARES" },
+            { "Nome": "FERREIRA COSTA E CIA LTDA", "Situação": "ESMALTEC CLIENTE" },
+            { "Nome": "NOVO ATACADO COMERCIO DE ALIMENTOS LTDA", "Situação": "MINALBA BRASIL CLIENTE" },
+            { "Nome": "NOVO MUNDO AMAZONIA SA", "Situação": "ESMALTEC CLIENTE" },
+            { "Nome": "COMERCIAL DE ALIMENTOS CARREFOUR LTDA", "Situação": "MINALBA BRASIL CLIENTE" },
+            { "Nome": "COMERCIAL BRASIL DE ATIBAIA LTDA", "Situação": "MINALBA BRASIL CLIENTE" },
+            { "Nome": "GRUPO CASAS BAHIA SA", "Situação": "ESMALTEC CLIENTE" },
+            { "Nome": "VIA VAREJO S/A", "Situação": "ESMALTEC CLIENTE" },
+            { "Nome": "CLAUDINO S A LOJAS DE DEPARTAMENTOS", "Situação": "ESMALTEC CLIENTE" },
+            { "Nome": "PAGSEGURO INTERNET INSTITUICAO DE PAGAMENTO SA", "Situação": "SISTEMA VERDES MARES" },
+            { "Nome": "MASTER ATS SUPERMERCADOS LTDA", "Situação": "MINALBA BRASIL CLIENTE" },
+            { "Nome": "COMERCIAL SAITO LTDA EM RECUPERACAO JUDICIAL", "Situação": "MINALBA BRASIL CLIENTE - Está no EBS como Grande Rede, entretanto, a pedido da Bia,  nas futuras solicitações entrar em contato com GEQ pedindo pra confirmar com o Crédito (e-mail de referência: DÚVIDA - 490484        MINALBA BRASIL CLIENTE - GOVERNANÇA DE CADASTRO" },
+            { "Nome": "SUPERMERCADOS MAMBO LTDA", "Situação": "MINALBA BRASIL CLIENTE" },
+            { "Nome": "GR SERVICOS E ALIMENTACAO LTDA", "Situação": "MINALBA BRASIL CLIENTE" },
+            { "Nome": "M DIAS BRANCO S A INDUSTRIA E COMERCIO DE ALIMENTOS", "Situação": "SISTEMA VERDES MARES" },
+            { "Nome": "BEMOL SA", "Situação": "ESMALTEC CLIENTE" },
+            { "Nome": "ROLDAO AUTO SERVICO COMERCIO DE ALIMENTOS LTDA", "Situação": "MINALBA BRASIL CLIENTE" }
+
+        ];
+        
+        function buscarNome() {
+            const nomeInput = document.getElementById('cnpj').value.trim();  // Corrigido para capturar o valor do campo correto
+            const resultado = baseDeDados.find(item => item.Nome === nomeInput);
+
+            const resultsContainer = document.getElementById('results-container');
+            const resultsContent = document.getElementById('results-content');
+
+            if (resultado) {
+                let html = `<ul>
+                                <strong>Situação:</strong> ${resultado["Situação"]}<br>
+                            </ul>`;
+                resultsContent.innerHTML = html;
+                resultsContainer.style.display = 'block';
+            } else {
+                resultsContent.innerHTML = '<p>Cliente Não Localizado.</p>';
+                resultsContainer.style.display = 'block';
+            }
+        }
+
+        // Adicionando evento ao botão
+        document.getElementById('search-btn').addEventListener('click', buscarNome);
+
+        // Adicionar função para captura da tecla ENTER
+        document.getElementById('cnpj').addEventListener('keypress', function (event) {  // Corrigido ID do campo
+            if (event.key === 'Enter') {
+                event.preventDefault(); // Impede que pule para a próxima linha
+                buscarNome(); // Chama a função de busca correta
+            }
+        });
+
+        // Abrir o modal ao clicar no botão "Abrir Formulário"
+        const modal = document.getElementById("formModal");
+        const openFormBtn = document.getElementById("open-form-btn");
+        const closeModalBtn = document.getElementById("closeModal");
+
+        openFormBtn.onclick = function () {
+            modal.style.display = "block";
+        }
+
+        // Fechar o modal ao clicar no "X"
+        closeModalBtn.onclick = function () {
+            modal.style.display = "none";
+        }
+
+        // Fechar o modal ao clicar fora dele
+        window.onclick = function (event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+
+        // Função para redirecionar para a página inicial
+        document.getElementById('home-btn').addEventListener('click', function () {
+            window.location.href = 'Painel Seletor de Consulta.html'; 
+            // Caso deseje trocar, atualize 'Painel Seletor de Consulta.html' para a URL desejada
+        });
+
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel de Consulta CNPJ e Nome Matriz</title>
+    <link rel="icon" href="https://chmasterdata.com.br/wp-content/uploads/2024/06/ch.png" type="image/png">
+    <style>
+        /* Estilos Globais */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        header {
+            background-color: #ffffff;
+            width: 100%;
+            padding: 20px 0;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        img {
+            max-width: 200px;
+            margin: 20px auto;
+        }
+
+        h1 {
+            font-size: 28px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        /* Estilizando o formulário */
+        .form-group textarea {
+            margin: 20px 0;
+            text-align: left;
+            width: 80%;
+            max-width: 400px;
+            
+        }
+        
+        .form-group label{
+            margin-top: 10px;
+        }
+
+        label {
+            font-weight: bold;
+            font-size: 18px;
+            margin-bottom: 8px;
+            display: block;
+            color: #444;
+        }
+
+        textarea {
+            width: 100%;
+            height: 40px;
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 6px;
+            border: 1px solid #ddd;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: border-color 0.3s ease;
+            resize: none;
+            border: 2px solid #1403fc;
+        }
+
+        textarea:focus {
+            border-color: #007bff;
+        }
+
+        /* Botão */
+        #search-btn {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: background-color 0.3s ease;
+        }
+
+        #search-btn:hover {
+            background-color: #0056b3;
+        }
+
+        /* Resultados */
+        .results {
+            margin-top: 30px;
+            margin-left: 22px;
+            font-size: 18px;
+            color: #333;
+            display: none;
+            width: 80%;
+            max-width: 600px;
+            text-align: left;
+            border: 1px solid #ddd;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Botão do formulário */
+        #open-form-btn {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 6px;
+            position: fixed;
+            top: 60px;
+            right: 20px;
+            z-index: 1000;
+            transition: background-color 0.3s ease;
+        }
+
+        #open-form-btn:hover {
+            background-color: #218838;
+        }
+
+        /* Texto acima do botão */
+        .info-text {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            font-size: 14px;
+            color: #333;
+            text-align: right;
+        }
+
+        /* Estilos do modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 10% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 600px;
+            border-radius: 10px;
+        }
+
+        iframe {
+            width: 100%;
+            height: 500px;
+            border: none;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        /* Botão de voltar à página inicial */
+        #home-btn {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 6px;
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+            transition: background-color 0.3s ease;
+        }
+
+        #home-btn:hover {
+            background-color: #c82333;
+        }
+
+        .info-text button{
+            margin-right: 20px;
+        }
+
+        /* Responsividade */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 24px;
+            }
+
+            label {
+                font-size: 16px;
+            }
+
+            textarea {
+                height: 35px;
+                font-size: 14px;
+            }
+
+            #search-btn,
+            #open-form-btn {
+                padding: 10px 20px;
+                font-size: 14px;
+            }
+
+            .modal-content {
+                width: 90%;
+            }
+
+            #open-form-btn {
+                right: 10px;
+                top: 50px;
+            }
+
+            .info-text {
+                right: 10px;
+                top: 10px;
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <img src="https://chmasterdata.com.br/wp-content/uploads/2024/06/ch.png" alt="Logo CH Master Data">
+        <h1>Consulta de Bloqueios e NGD</h1>
+    </header>
+
+    <main>
+        <div class="form-group">
+            <label for="cnpj">Cliente (Nome Completo)</label>
+            <textarea id="cnpj" name="S1" tabindex="1"></textarea>
+        </div>
+
+        <!-- Texto acima do botão de formulário -->
+        <div class="info-text">
+            <p>Deseja incluir alguma informação?</p>
+            <button id="open-form-btn">Abrir Formulário</button>
+        </div>
+
+        <button id="search-btn">Buscar</button>
+
+        <div class="results" id="results-container">
+            
+            <div id="results-content"></div>
+        </div>
+
+        <!-- Botão de retorno à página inicial -->
+        <button id="home-btn">Retornar</button>
+
+    </main>
+
+    <!-- Modal para o formulário -->
+    <div id="formModal" class="modal">
+        <div class="modal-content">
+            <span class="close" id="closeModal">&times;</span>
+            <iframe src="https://forms.office.com/r/iEfNxE2gz2" title="Formulário Microsoft"></iframe>
+        </div>
+    </div>
+
+    <script>
+        // Base de dados simulada
+        const baseDeDados = [
+            { "Nome": "A J G DE ARRUDA ME", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "AFOGADOS COMERCIO DE COMBUSTIVEL LTDA EPP", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "ALANA JAMILE DE ALMEIDA MOURA FONTES", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "AMANDA MARIA MESQUITA DA SILVA 10739275470", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "ANA LUIZA GOMES DA SILVA NEVES 06353188498", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "ANA PAULA LINS DA SILVA - ME", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "ANA ROSA UCHOA SULINO", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "ANDERSON GOMES FERRAZ", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "ANDERSON KARLOS ALVES FERREIRA 10673320499", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "ANDREA TOMAZETTI FERREIRA", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "ANTONIO GILVAN DA COSTA", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "ARGEMIRA PEREIRA DOS SANTOS", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "ARLAN SANTIAGO DE OLIVEIRA 04650513596", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "ARTHUR VIKTOR MAGALHAES DE FRANCA 7046962146", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "AUGUSTINHO GALDINO DA SILVA JUNIOR", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "AUGUSTINHO GALDINO DA SILVA JUNIOR COMERCIO LTDA", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "AUREA AURINETE NEGREIROS DE ALCANTARA 19472153453", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "AUTO POSTO GLOBO LTDA", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "BERIVALDO SABINO DA SILVA", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "BOMBONIERE E VAREJO GUARARAPES EIRELI", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "BRASILEIRO E FROTA LANCHONETE LTDA", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "BRASILIDADE URBANIZADORA LTDA", "Situação": "AO RECEBER SOLICITAÇÃO AJUSTAR BLOQUEIOS PARA SIM" },
+            { "Nome": "CARLOS ANTONIO DE SANTANA FILHO 08873529445", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "CASA DAS CARNES EXPRESS ACOUGUE LTDA", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "CLAUDIA MARIA DAMIAO DA SILVA", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "CLAUDIA MARIA DO NASCIMENTO", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "CLAYTON CRISTIANO DANIELATO DA SILVA 30364467886", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "CLOVIS ANTONIO LOPES 61262676487", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "COMERCIAL DE BEBIDAS BRISTOL LTDA - ME", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "COMERCIO DE BEBIDAS E MINI MERCADO MAIRIPORA L", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "D TINNA DISTRIBUIDORA DE ALIMENTOS EIRELI", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "DANUBIA RODRIGUES VASCONCELOS DA SILVA 05736554488", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "DEBSON XAVIER DA SILVA", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "DL MERCEARIA LTDA", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "DOURADO & SILVA LTDA", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "E1 ENERGIAS RENOVAVEIS S/A", "Situação": "AO RECEBER SOLICITAÇÃO AJUSTAR BLOQUEIOS PARA SIM" },
+            { "Nome": "EDILEUZA DOS SANTOS", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "EDINEIDE OLIVEIRA ANDRADE", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "EDVALDO J DA ROCHA RESTAURANTE EIRELI", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "ELAINE CRISTINA DE ASSIS", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aqu ila.caroline@geq.com.br)" },
+            { "Nome": "ELIANE MARQUES DA SILVA 27760812434", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "ELIANE SILVA DANTAS", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "ELIEL CALADO DA SILVA", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "ELIZEU PEREIRA DE ANDRADE 01973897407", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "EMERSON ROBERTO LIMA SA 11487885490", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "EP QUEIROZ PARTICIPAÇÕES LTDA", "Situação": "AO RECEBER SOLICITAÇÃO AJUSTAR BLOQUEIOS PARA SIM" },
+            { "Nome": "ERALDO MARCOLINO DA SILVA", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "ERINALDO MACHADO DA SILVA", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "ERINALDO MACHADO DA SILVA FILHO MERCADINHO", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "EUNICE PEREIRA DA SILVA 02458134467", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "EXOLOGISTICA TRANSPORTADORA S A", "Situação": "Cliente sem DOCUMENTAÇÃO - Se vier sem Regime Especial, favor, me informar. Na minha ausência, enviar e-mail ao GEQ questionando se de fato, o regime torna-se dispensável." },
+            { "Nome": "FABIO JOSE DOS SANTOS 88831531468", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "FABIO MARTINS COSTA 83500286453", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "FERREIRA & CARVALHO LTDA", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "FLAVIA MARIA FIRMINO DE ANDRADE 04704718409", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "FRANCISCO ANTONIO DE FREITAS FILHO", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "G O SANTANA DE MELO COMERCIO DE ALIMENTOS", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "GARAGEM - MINGUITO TRANSPORTES", "Situação": "Cliente sem DOCUMENTAÇÃO - Se vier sem Regime Especial, favor, me informar. Na minha ausência, enviar e-mail ao GEQ questionando se de fato, o regime torna-se dispensável." },
+            { "Nome": "GEORGIO SOUZA QUIRINO", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "GEVANILSON MOTA GALIND O", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "GIVALDO DA SILVA RIBEIRO 82268525449", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "GLEYCE BARBOZA DA SILVA 04751665405", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "GRASIELA RODRIGUES CARNEIRO SOUZA 97031135591", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "GU LANCHONETE LTDA ME", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "GUILHERME FERREIRA DE MELO", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "HELIO FRANCISCO ALVES COMERCIO DE ALIMENTOS", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "IRENE QUITERIA DOS SANTOS 72459999453", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "IVANILDO SEVERINO FLORENCIO 40090442415", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "IVONE MARIA DE OLIVEIRA", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "J F SANTOS COTIA", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "J. N. FREITAS ROCHA", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "JAC - AQUE. IGREJA BATISTA DA C", "Situação": "Cliente sem DOCUMENTAÇÃO - Se vier sem Regime Especial, favor, me informar. Na minha ausência, enviar e-mail ao GEQ questionando se de fato, o regime torna-se dispensável." },
+            { "Nome": "JAC - COZ. IGREJA BATISTA DA CID", "Situação": "Cliente sem DOCUMENTAÇÃO - Se vier sem Regime Especial, favor, me informar. Na minha ausência, enviar e-mail ao GEQ questionando se de fato, o regime torna-se dispensável." },
+            { "Nome": "JACKSON DOUGLAS BELIZE ALVES", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "JAILDISON BRAGA DA SILVA", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "JANAINA MARIA DA SILVA 01302535374", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "JARBAS RODRIGUES DA SILVA 10818147482", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "JEAN CARLOS DOS SANTOS 78162980482", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "JOAO COSTA MARTINS", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "JOAO GOMES DE ANDRADE BEBIDAS ME", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "JOAO PAULO MOURA DA SILVA", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "JOAQUIM LIRA CAMPOS NETO 70280173466", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "JOEL FELIX DE OLIVEIRA 05092407476", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "JOEL GOMES DA SILVA NETO 09698156461", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "JOICE ELAINE DE SANTANA BRAZ", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "JONATAS CICERO FERREIRA PEREIRA 06440713469", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "JOSE ALVES DE LIRA FILHO", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "JOSE ANTENIZIO LIMA GONCALVES LANCHES E DOCERI", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "JOSE DE ALMEIDA", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "JOSE GOMES DA SILVA", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "JOSE IVO SOARES DA SILVA", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "JOSE JARDEL BEZERRA GOMES 11342747429", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "JOSE MARIO FRANCISCO FILHO 10861222407", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "JOSE SANTOS MENDONCA", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "JOSE SEVERINO DA SILVA", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "JOSE WILSON V DE MELO BEBIDAS E BALAS", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "JOSENILDO FERREIRA ALVES", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "K L COMERCIO VAREJISTA DE ALIMENTOS E PERFUMARIA LTDA", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "KARINE THAIS SALV ADOR DE LIMA 11754483461", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "KELLE MOURA DOS SANTOS DANTAS", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "KELLY BATISTA DO NASCIMENTO 09108590435", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "KLEBER JOSE DA SILVA 71337509450", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "LAB QUIMICA - LAB ANALITIC", "Situação": "Cliente sem DOCUMENTAÇÃO - Se vier sem Regime Especial, favor, me informar. Na minha ausência, enviar e-mail ao GEQ questionando se de fato, o regime torna-se dispensável." },
+            { "Nome": "LADJANE ALICE DE SOUSA 64901599453", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "LADYANE MAGDA SILVA N. CABRAL - ME", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "LEONARDO FONSECA DA SILVA 11011110466", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "LEONILDO AURINO CORREIA DE AMORIM", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "LINDINALVA MARIA DA SILVA 10105338435", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "LUCAS MATHEUS A P VICTORINO", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "LUCIENE DA S ARAUJO LIMA", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "LUIZ CARLOS BARBOSA DE ASSIS", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "MARCEL FRANKLIN DA SILVA ARAUJO 04577097583", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "MARCELO ANTONIO DA SILVA 01377247481", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "MARCELO MARCOS DE MELO", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "MARIA CRISTIANE MATIAS DA SILVA", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "MARIA DAS GRACAS BARBOSA REGES 37754114291", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "MARIA DE FATIMA FERNANDES MARINHO 71062653491", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "MARIA FERREIRA CORREIA SILVA 08655885460", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "MARIA SOCORRO PROCOPIO ARAUJO SILVA 51904420478", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "MATHEUS LIMA FONSECA 03877968511", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "MAURICIO FRANCISCO DOS SANTOS", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "MAURISERGIO DA SILVA CRUZ", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "MERCADINHO NOVO JIQUIA LTDA", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "MERCEARIA ARCO IRIS EIRELI", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "MGS COMERCIO ALIMENTICIO EIRELI", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "MINGUITO TRANSPORTES  ALSTOM", "Situação": "Cliente sem DOCUMENTAÇÃO - Se vier sem Regime Especial, favor, me informar. Na minha ausência, enviar e-mail ao GEQ questionando se de fato, o regime torna-se dispensável." },
+            { "Nome": "MINGUITO TRANSPORTES - GE", "Situação": "Cliente sem DOCUMENTAÇÃO - Se vier sem Regime Especial, favor, me informar. Na minha ausência, enviar e-mail ao GEQ questionando se de fato, o regime torna-se dispensável." },
+            { "Nome": "MINGUITO TRANSPORTES ROD. LTDA", "Situação": "Cliente sem DOCUMENTAÇÃO - Se vier sem Regime Especial, favor, me informar. Na minha ausência, enviar e-mail ao GEQ questionando se de fato, o regime torna-se dispensável." },
+            { "Nome": "MP LANCHES LTDA", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "N L DA SILVA COMERCIO DE BEBIDAS", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "NEGA COMERCIO E DISTRIBUIDORA DE ALIMENTOS E B", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "Americanas S/A", "Situação": "Configuração Padrão: Tipo de Cliente NORMAL / Forma: A VISTA, se vier diferente, falar com GEQ." },
+            { "Nome": "NILTON CESAR DE AMORIM 04482563471", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "NUNES E SANTOS LANCHONETE REST. LTDA ME", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "OSEAS TAVARES PESSOA FILHO MERCEARIA", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "P C PEREIRA COMERCIO VAREJISTA DE PRODUTOS ALIMENTICIOS", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com .br)" },
+            { "Nome": "P F ALVES DE ALBUQUERQUE FILHO", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "PAES E DOCES DA VILA LTDA", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "PAES E DOCES VSV LTDA", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "PANIFICACAO E MERCEARIA ITABAINA EIRELI", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "PANIFICADORA VALE DO JORDAO LTDA ME", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "PATRICIA JOSE INOJOSA DA SILVA BOMBONS - ME", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "PATRICIO OLIVEIRA GOMES 08260638533", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "PAULO DE OLIVEIRA", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "PAULO DE PAULA E SILVA MERCEARIA", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "PAULO RICARDO VICENTE FERREIRA", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "PAULO ROGERIO MACEDO SILVA - ME", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "PAULO SOARES RAPOSO FILHO", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "PAULO VELOSO CORREIA 12499846453", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "R. V. COMBUSTIVEIS LTDA", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "RAIMUNDO SILVA DE FREITAS", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "REIKA ROCHA DA SILVA", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "RENATO ARRES BEZERRA DA SILVA", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "RENATO DO VALE MENDONCA SILVA 04964966461", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "RENE TEIXEIRA DA SILVA 09602938412", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "RESTAURANTE E PIZZARIA DUDEK EIRELI", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq .com.br)" },
+            { "Nome": "RIBEIRO & ANDRADE PADARIA E PASTELARIA LTDA - ME", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "ROBSON SOARES DOS SANTOS", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "ROGERIO DA SILVA OLIVEIRA MERCADINHO", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "RONNY DOMINGOS DE OLIVEIRA ALVES", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "ROSEMEIRE DA SILVA BOMFIM 81952554420", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "SANDRA CANDIDA DE SENA 03522511409", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "SEGRETO & SEGRETO LTDA EPP", "Situação": "Cliente sem DOCUMENTAÇÃO - Se vier sem Regime Especial, favor, me informar. Na minha ausência, enviar e-mail ao GEQ questionando se de fato, o regime torna-se dispensável." },
+            { "Nome": "SERGIO TAVARES DE MELO 04152534460", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "SEVERINA ALVES DE PAULA COMERCIO DE ALIMENTOS", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "SEVERINA FERREIRA DA SILVA", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "SEVERINO BATISTA DE LUNA", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "SHARON GISELE KOVARI CANDI", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "SILVANIO DE ALMEIDA SANTOS", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "SONIA MARIA DE AZEVEDO 89926358420", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "SONIA MARIA DE SANTANA", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "TERRENO DE PAIVA COMERCIO DE PRODUTOS ALIMENTICIOS LTDA", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "THALISON RODRIGO JUVENCIO DA SILVA", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "THIAGO DE OLIVEIRA MIGUEL", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "VAREJAO DO POVO LTDA", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "VIANA E PARIZOTTO LT DA", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "VICTOR HUGO GONCALVES MOTA", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "WANA IND E COM - RIO ABAIXO", "Situação": "Cliente sem DOCUMENTAÇÃO - Se vier sem Regime Especial, favor, me informar. Na minha ausência, enviar e-mail ao GEQ questionando se de fato, o regime torna-se dispensável." },
+            { "Nome": "WD MERCADINHO LTDA - ME", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "WELLINGTON FERNANDO SOBRAL DA SILVA 10681829460", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "WILLIAMS ERONIDES DE LIMA 11972192426", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "SUPERMERCADO REAL LTDA", "Situação": "BLOQUEIO TEMPORÁRIO - Algo está alterando o endereço do cliente. Antes de aprovar, questionar ao GEQ se o erro foi corrigido." },
+            { "Nome": "MARIA EMILIA RODRIGUES SOUSA - 65678737520", "Situação": "Clientes que só podem transacionar mediante a autorização da Áquila Caroline (aquila.caroline@geq.com.br)" },
+            { "Nome": "FUNDACAO EDSON QUEIROZ", "Situação": "NÃO é mais coligada - Confirmado em 05/06" },
+            { "Nome": "CARAJAS MATERIAL DE CONSTRUCAO LTDA", "Situação": "PREENCHER O CAMPO CNPJ MATRIZ (CONFIMADO EBS): 03656804002428" },
+            { "Nome": "FORMOSA SUPERMERCADOS E MAGAZINE LTDA", "Situação": "PREENCHER O CAMPO CNPJ MATRIZ (CONFIMADO EBS): 63864771000147" },
+            { "Nome": "CASSOL MATERIAIS DE CONSTRUCAO LTDA", "Situação": "NO CAMPO MATRIZ, PREENCHER COM ESSE CNPJ: 75400218000809" },
+            { "Nome": "Queiroz Com. E Part. - Raíz do CNPJ: 07.205.768", "Situação": "NECESSÁRIO SEGUIR O PADRÃO -> Agência: 0452-9 Conta: 311.775-8 IMPORTANTE: Após concluir, enviar email pro GEQ acompanhar a integração" },
+            { "Nome": "Queiroz Empreendimentos Imob. Ltda. - Raíz do CNPJ: 07.797.525", "Situação": "NECESSÁRIO SEGUIR O PADRÃO -> Agência: 0452-9 Conta: 334.150-0 IMPORTANTE: Após concluir, enviar email pro GEQ acompanhar a integração" },
+            { "Nome": "Nacional Investimentos e Part. - Raíz do CNPJ: 07.205.735", "Situação": "NECESSÁRIO SEGUIR O PADRÃO -> Agência: 0452-9 Conta: 326.815-2 IMPORTANTE: Após concluir, enviar email pro GEQ acompanhar a integração" },
+            { "Nome": "Queiroz Participações Ltda. - Raíz do CNPJ: 23.651.139", "Situação": "NECESSÁRIO SEGUIR O PADRÃO -> Agência: 0452-9 Conta: 18449-7 IMPORTANTE: Após concluir, enviar email pro GEQ acompanhar a integração" },
+            { "Nome": "Nacional Gás Butano Distribuidora. - Raíz do CNPJ: 06.980.064", "Situação": "NECESSÁRIO SEGUIR O PADRÃO ->  Agência: 0452- 9 Conta: 311.501-1 IMPORTANTE: Após concluir, enviar email pro GEQ acompanhar a integração" },
+            { "Nome": "ASB Bebibdas - Raíz do CNPJ: 09.285.874", "Situação": "NECESSÁRIO SEGUIR O PADRÃO -> Agência: 0452-9 Conta: 45996-8 IMPORTANTE: Após concluir, enviar email pro GEQ acompanhar a integração" },
+            { "Nome": "Indaiá Brasil Águas Minerais Ltda. - Raíz do CNPJ: 00.048.785", "Situação": "NECESSÁRIO SEGUIR O PADRÃO -> Agência: 0452-9 Conta: 315.144-1 IMPORTANTE: Após concluir, enviar email pro GEQ acompanhar a integração" },
+            { "Nome": "Midol Mineração Dolomita Ltda. - Raíz do CNPJ: 09.409.822", "Situação": "NECESSÁRIO SEGUIR O PADRÃO -> Agência: 0452-9 Conta: 317.739-4 IMPORTANTE: Após concluir, enviar email pro GEQ acompanhar a integração" },
+            { "Nome": "Minalba Alimentos e Bebidas Ltda. - Raíz do CNPJ: 54.505.052", "Situação": "NECESSÁRIO SEGUIR O PADRÃO -> Agência: 0452-9 Conta: 334.188-7 IMPORTANTE: Após concluir, enviar email pro GEQ acompanhar a integração" },
+            { "Nome": "Nacional Arco Iris Ind. - Raíz do CNPJ: 09.320.639", "Situação": "NECESSÁRIO SEGUIR O PADRÃO -> Agência: 0452-9 Conta: 231.883-0 IMPORTANTE: Após concluir, enviar email pro GEQ acompanhar a integração" },
+            { "Nome": "Esmaltec S.A. - Raíz do CNPJ: 02.948.030", "Situação": "NECESSÁRIO SEGUIR O PADRÃO -> Agência: 0452-9 Conta: 403.259-4 IMPORTANTE: Após concluir, enviar email pro GEQ acompanhar a integração" },
+            { "Nome": "Radio Verdes Mares Ltda. - Raíz do CNPJ: 07.199.656", "Situação": "NECESSÁRIO SEGUIR O PADRÃO -> Agência: 0452-9 Conta: 329.338-6 IMPORTANTE: Após concluir, enviar email pro GEQ acompanhar a integração" },
+            { "Nome": "Televisão Verdes Mares Ltda. - Raíz do CNPJ: 07.199.664", "Situação": "NECESSÁRIO SEGUIR O PADRÃO -> Agência: 0452-9 Conta: 329.340-8 IMPORTANTE: Após concluir, enviar email pro GEQ acompanhar a integração" },
+            { "Nome": "Editora Verdes Mares Ltda. - Raíz do CNPJ: 07.209.299", "Situação": "NECESSÁRIO SEGUIR O PADRÃO -> Agência: 0452-9 Conta: 329.339-4 IMPORTANTE: Após concluir, enviar email pro GEQ acompanhar a integração" },
+            { "Nome": "TV Diário Ltda. - Raíz do CNPJ: 23.493.364", "Situação": "NECESSÁRIO SEGUIR O PADRÃO -> Agência: 0452-9 Conta: 399.113-0 IMPORTANTE: Após concluir, enviar email pro GEQ acompanhar a integração" },
+            { "Nome": "TV Norte do Ceará Ltda. - Raíz do CNPJ: 02.399.894", "Situação": "NECESSÁRIO SEGUIR O PADRÃO -> Agência: 0452-9 Conta: 404.830-0 IMPORTANTE: Após concluir, enviar email pro GEQ acompanhar a integração" },
+            { "Nome": "Cascaju Agroindustrial S.A. - Raíz do CNPJ: 07.092.232", "Situação": "NECESSÁRIO SEGUIR O PADRÃO -> Agência: 0452-9 Conta: 305.864-6 IMPORTANTE: Após concluir, enviar email pro GEQ acompanhar a integração" },
+            { "Nome": "Esperança Agropecuária e ind. - Raíz do CNPJ: 06.385.934", "Situação": "NECESSÁRIO SEGUIR O PADRÃO -> Agência: 0452-9 Conta: 334.129-1 IMPORTANTE: Após concluir, enviar email pro GEQ acompanhar a integração" },
+            { "Nome": "NGC DISTRIBUIDORA DE GAS LTDA", "Situação": "Caso haja solicitação, verificar o motivo. NGC não \"existe\" mais. Não deve haver solicitações para ela. Após retorno do motivo, abrir chamado pro GEQ." },
+            { "Nome": "EDSON QUEIROZ NETO", "Situação": "Se chegar solicitação pedindo alteração de endereço, abrir chamado GEQ. NÃO SEGUIR! Aguardar retorno do GEQ." },
+            { "Nome": "ANTONIA TICYANA MARINHO MARTINS", "Situação": "AUTORIZADO NGD" },
+            { "Nome": "AGLAILSON ALVES VITAL", "Situação": "AUTORIZADO NGD" },
+            { "Nome": "ANA MYKAELE MAIA LOPES", "Situação": "AUTORIZADO NGD" },
+            { "Nome": "ANDRESSA BARBOSA CORDEIRO", "Situação": "AUTORIZADO NGD" },
+            { "Nome": "ANTONIO PESSOA DE ARAUJO NETO", "Situação": "AUTORIZADO NGD" },
+            { "Nome": "BRUNA MARIA VIEIRA BARBOZA", "Situação": "AUTORIZADO NGD" },
+            { "Nome": "ELANNY CRISTINA LOPES", "Situação": "AUTORIZADO NGD" },
+            { "Nome": "ERLES MARTINS DA SILVA", "Situação": "AUTORIZADO NGD" },
+            { "Nome": "GLAYCIANE MARIA COSMO DE OLIVEIRA", "Situação": "AUTORIZADO NGD" },
+            { "Nome": "JOSIANE DE SOUZA ROCHA", "Situação": "AUTORIZADO NGD" },
+            { "Nome": "LUANA LIMA DE MELO ROCHA", "Situação": "AUTORIZADO NGD" },
+            { "Nome": "LUCAS FELIX CORREIA PINTO", "Situação": "AUTORIZADO NGD" },
+            { "Nome": "MICHELE PEREIRA MOREIRA", "Situação": "AUTORIZADO NGD" },
+            { "Nome": "MILLENA MARTINS DE ANDRADE", "Situação": "AUTORIZADO NGD" },
+            { "Nome": "PAULIANE ALEXANDRE FREITAS", "Situação": "AUTORIZADO NGD" },
+            { "Nome": "TAMIRES DOS SANTOS ALVES DUARTE", "Situação": "AUTORIZADO NGD" },
+            { "Nome": "SAMUEL OLIVEIRA DE ALMEIRA", "Situação": "AUTORIZADO NGD - Mudou de setor, dificilemente abrirá solicitação via WBL (usará o sesuite), mas caso abra solicitação, não precisa mais de validação." },
+            { "Nome": "PEDRO MOREIRA DA SILVA FILHO", "Situação": "AUTORIZADO NGD em 04/05" },
+            { "Nome": "MOABE ALVES DA SILVA FILHO", "Situação": "AUTORIZADO NGD em 10/08" },
+            { "Nome": "CLAUDIA ROCHA FIGUEIRA", "Situação": "AUTORIZADO NGD em 14/03/2024" },
+            { "Nome": "GUILHERME GUTIERREZ SEVERO DE SOUZA", "Situação": "AUTORIZADO NGD em 15/06" },
+            { "Nome": "ESMALTEC CLIENTE", "Situação": "EVITAR CONTATO - VERIFICAR NO CHAT SE OUTRA ANALISTA CONSEGUE AJUDAR NA SUA DÚVIDA." },
+            { "Nome": "ADRIANO SILVA DE QUEIROZ", "Situação": "PODE HABILITAR AS LINHAS DA ESMALTEC" },
+            { "Nome": "MATEUS AUGUSTO PINTO VIEIRA", "Situação": "PODE HABILITAR AS LINHAS DA ESMALTEC" },
+            { "Nome": "VIRGILIO ALBUQUERQUE FRANCO", "Situação": "PODE HABILITAR AS LINHAS DA ESMALTEC" },
+            { "Nome": "FERNANDO ANTONIO CARNEIRO DA CUNHA FROTA", "Situação": "VERIFICAR COM GEQ - QUALQUER AMBIENTE" },
+            { "Nome": "MARCOS VENICIOS CRISOSTOMO", "Situação": "VERIFICAR COM GEQ - QUALQUER AMBIENTE" },
+            { "Nome": "EDILBERTO MACHADO RIBEIRO", "Situação": "VERIFICAR COM GEQ - QUALQUER AMBIENTE // SOBRE DN: Solicitante alega não ter. Pode seguir SEM enviar comunicado sobre. O mesmo está ciente." }
+
+        ];
+        
+        function buscarNome() {
+            const nomeInput = document.getElementById('cnpj').value.trim();  // Corrigido para capturar o valor do campo correto
+            const resultado = baseDeDados.find(item => item.Nome === nomeInput);
+
+            const resultsContainer = document.getElementById('results-container');
+            const resultsContent = document.getElementById('results-content');
+
+            if (resultado) {
+                let html = `<ul>
+                                <strong>Situação:</strong> ${resultado["Situação"]}<br>
+                            </ul>`;
+                resultsContent.innerHTML = html;
+                resultsContainer.style.display = 'block';
+            } else {
+                resultsContent.innerHTML = '<p>Cliente Não Localizado.</p>';
+                resultsContainer.style.display = 'block';
+            }
+        }
+
+        // Adicionando evento ao botão
+        document.getElementById('search-btn').addEventListener('click', buscarNome);
+
+        // Adicionar função para captura da tecla ENTER
+        document.getElementById('cnpj').addEventListener('keypress', function (event) {  // Corrigido ID do campo
+            if (event.key === 'Enter') {
+                event.preventDefault(); // Impede que pule para a próxima linha
+                buscarNome(); // Chama a função de busca correta
+            }
+        });
+
+        // Abrir o modal ao clicar no botão "Abrir Formulário"
+        const modal = document.getElementById("formModal");
+        const openFormBtn = document.getElementById("open-form-btn");
+        const closeModalBtn = document.getElementById("closeModal");
+
+        openFormBtn.onclick = function () {
+            modal.style.display = "block";
+        }
+
+        // Fechar o modal ao clicar no "X"
+        closeModalBtn.onclick = function () {
+            modal.style.display = "none";
+        }
+
+        // Fechar o modal ao clicar fora dele
+        window.onclick = function (event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+
+        // Função para redirecionar para a página inicial
+        document.getElementById('home-btn').addEventListener('click', function () {
+            window.location.href = 'Painel Seletor de Consulta.html'; 
+            // Caso deseje trocar, atualize 'Painel Seletor de Consulta.html' para a URL desejada
+        });
+
+    </script>
+
+</body>
+
+</html>
