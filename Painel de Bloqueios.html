@@ -253,7 +253,7 @@
 
     <main>
         <div class="form-group">
-            <label for="cnpj">Cliente (Nome Completo)</label>
+            <label for="cnpj">Cliente (Primeiro Nome)</label>
             <textarea id="cnpj" name="S1" tabindex="1"></textarea>
         </div>
 
@@ -521,65 +521,67 @@
             { "Nome": "FERNANDO ANTONIO CARNEIRO DA CUNHA FROTA", "Situação": "VERIFICAR COM GEQ - QUALQUER AMBIENTE" },
             { "Nome": "MARCOS VENICIOS CRISOSTOMO", "Situação": "VERIFICAR COM GEQ - QUALQUER AMBIENTE" },
             { "Nome": "EDILBERTO MACHADO RIBEIRO", "Situação": "VERIFICAR COM GEQ - QUALQUER AMBIENTE // SOBRE DN: Solicitante alega não ter. Pode seguir SEM enviar comunicado sobre. O mesmo está ciente." }
-
+            
         ];
         
         function buscarNome() {
-            const nomeInput = document.getElementById('cnpj').value.trim();  // Corrigido para capturar o valor do campo correto
-            const resultado = baseDeDados.find(item => item.Nome === nomeInput);
+    const nomeInput = document.getElementById('cnpj').value.trim();
+    const resultados = baseDeDados.filter(item => item.Nome.toLowerCase().startsWith(nomeInput.toLowerCase())); // Verifica se o nome começa com o valor inserido, ignorando maiúsculas/minúsculas
 
-            const resultsContainer = document.getElementById('results-container');
-            const resultsContent = document.getElementById('results-content');
+    const resultsContainer = document.getElementById('results-container');
+    const resultsContent = document.getElementById('results-content');
 
-            if (resultado) {
-                let html = `<ul>
-                                <strong>Situação:</strong> ${resultado["Situação"]}<br>
-                            </ul>`;
-                resultsContent.innerHTML = html;
-                resultsContainer.style.display = 'block';
-            } else {
-                resultsContent.innerHTML = '<p>Cliente Não Consta nos Bloqueios.</p>';
-                resultsContainer.style.display = 'block';
-            }
-        }
-
-        // Adicionando evento ao botão
-        document.getElementById('search-btn').addEventListener('click', buscarNome);
-
-        // Adicionar função para captura da tecla ENTER
-        document.getElementById('cnpj').addEventListener('keypress', function (event) {  // Corrigido ID do campo
-            if (event.key === 'Enter') {
-                event.preventDefault(); // Impede que pule para a próxima linha
-                buscarNome(); // Chama a função de busca correta
-            }
+    if (resultados.length > 0) {
+        let html = '<ul>';
+        resultados.forEach(resultado => {
+            html += `<li><strong>Nome:</strong> ${resultado.Nome} <br>
+                     <strong>Situação:</strong> ${resultado["Situação"]}</li><br>`;
         });
+        html += '</ul>';
+        resultsContent.innerHTML = html;
+    } else {
+        resultsContent.innerHTML = '<p>Cliente Não Consta em Grande Rede.</p>';
+    }
+    resultsContainer.style.display = 'block';
+}
 
-        // Abrir o modal ao clicar no botão "Abrir Formulário"
-        const modal = document.getElementById("formModal");
-        const openFormBtn = document.getElementById("open-form-btn");
-        const closeModalBtn = document.getElementById("closeModal");
+    // Adicionando evento ao botão
+    document.getElementById('search-btn').addEventListener('click', buscarNome);
+
+    // Adicionar função para captura da tecla ENTER
+    document.getElementById('cnpj').addEventListener('keypress', function (event) {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            buscarNome();
+    }
+});
+
+    // Abrir o modal ao clicar no botão "Abrir Formulário"
+    const modal = document.getElementById("formModal");
+    const openFormBtn = document.getElementById("open-form-btn");
+    const closeModalBtn = document.getElementById("closeModal");
 
         openFormBtn.onclick = function () {
-            modal.style.display = "block";
+        modal.style.display = "block";
+    }
+
+    // Fechar o modal ao clicar no "X"
+    closeModalBtn.onclick = function () {
+        modal.style.display = "none";
         }
 
-        // Fechar o modal ao clicar no "X"
-        closeModalBtn.onclick = function () {
+    // Fechar o modal ao clicar fora dele
+    window.onclick = function (event) {
+        if (event.target == modal) {
             modal.style.display = "none";
         }
+}
 
-        // Fechar o modal ao clicar fora dele
-        window.onclick = function (event) {
-            if (event.target == modal) {
-                modal.style.display = "none";
-            }
-        }
+// Função para redirecionar para a página inicial
+document.getElementById('home-btn').addEventListener('click', function () {
+    window.location.href = 'Painel Seletor de Consulta.html';
+});
 
-        // Função para redirecionar para a página inicial
-        document.getElementById('home-btn').addEventListener('click', function () {
-            window.location.href = 'Painel Seletor de Consulta.html'; 
-            // Caso deseje trocar, atualize 'Painel Seletor de Consulta.html' para a URL desejada
-        });
 
     </script>
 
