@@ -49,25 +49,20 @@
         .button {
             background-color: #007BFF;
             color: #fff;
-            padding: 10px 20px;
+            padding: 15px;
             border: none;
             border-radius: 8px;
-            font-size: 26px;
+            font-size: 20px;
             cursor: pointer;
             transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
             text-decoration: none;
-            width: 180px;
+            width: 180px; /* Tamanho fixo para todos os botões */
             text-align: center;
-            font-size: bold;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            
-        }
-
-        .center-text {
             display: flex;
-            justify-content: center;
             align-items: center;
-}
+            justify-content: center; /* Alinhamento central */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
 
         .button:hover {
             background-color: #0056b3;
@@ -94,7 +89,6 @@
 
             .button {
                 font-size: 16px;
-                padding: 12px 20px;
                 width: 160px;
             }
         }
@@ -106,10 +100,10 @@
 
             .button {
                 font-size: 14px;
-                padding: 10px 18px;
                 width: 140px;
             }
         }
+
         #home-btn {
             background-color: #dc3545;
             color: white;
@@ -142,8 +136,9 @@
         <div class="buttons">
             <a href="Pesquisa Autorização de Solicitante.html" class="button">Autorização de Solicitante</a>
             <a href="Pesquisa Mural Informativo.html" class="button">Mural Informativo</a>
-            <a href="Pesquisa Condição de Pagamento.html" class="button center-text">Condição de Pagamento</a>
-            <a href="Pesquisa Agencia.html" class="button center-text">Agência</a>
+            <a href="Pesquisa Condição de Pagamento.html" class="button">Condição de Pagamento</a>
+            <a href="Pesquisa Agencia.html" class="button">Agência</a>
+            <a href="Formatação Fornecedores.html" class="button">Formatação</a>
         </div>
     </div>
 </body>
@@ -151,9 +146,8 @@
 <script>
     // Função para redirecionar para a página inicial
     document.getElementById('home-btn').addEventListener('click', function () {
-            window.location.href = 'index.html'; 
-            // Caso deseje trocar, atualize 'index.html' para a URL desejada
-        });
+        window.location.href = 'index.html'; 
+    });
 </script>
 
 </html>
