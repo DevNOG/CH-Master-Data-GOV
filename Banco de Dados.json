@@ -1,0 +1,62 @@
+[
+    {
+        "username": "fernando.mendes",
+        "password": "DvG9NwYem6",
+        "nomeCompleto": "Fernando Mendes",
+        "redirectUrl": "Cliente e Fornecedor.html"
+    },
+    {
+        "username": "julia.santos",
+        "password": "YutVULUzFt",
+        "nomeCompleto": "44TrtpDMZV",
+        "redirectUrl": "Cliente e Fornecedor.html"
+    },
+    {
+        "username": "andressa.christine",
+        "password": "TOzLAv0tEF",
+        "nomeCompleto": "Andressa Christine",
+        "redirectUrl": "Cliente e Fornecedor.html"
+    },
+    {
+        "username": "daiana.vilela",
+        "password": "oTx8vAcyWE",
+        "nomeCompleto": "Daiana Vilela",
+        "redirectUrl": "Cliente e Fornecedor.html"
+    },
+    {
+        "username": "juliana.rangel",
+        "password": "sNnBGfoqUz",
+        "nomeCompleto": "Juliana Rangel",
+        "redirectUrl": "Cliente e Fornecedor.html"
+    },
+    {
+        "username": "luiz.mageste",
+        "password": "4IrFJfKh2s",
+        "nomeCompleto": "Luiz Mageste",
+        "redirectUrl": "Cliente e Fornecedor.html"
+    },
+    {
+        "username": "raquel.rocha",
+        "password": "nVmgMSIRLX",
+        "nomeCompleto": "Raquel Rocha",
+        "redirectUrl": "Cliente e Fornecedor.html"
+    },
+    {
+        "username": "stefani.rezende",
+        "password": "o7ZQZ92RZX",
+        "nomeCompleto": "Stéfani Rezende",
+        "redirectUrl": "Cliente e Fornecedor.html"
+    },
+    {
+        "username": "fabiola.sobral",
+        "password": "L7bH9qW3m2",
+        "nomeCompleto": "Fabiola Sobral",
+        "redirectUrl": "Cliente e Fornecedor.html"
+    },
+    {
+        "username": "admin",
+        "password": "AdminGovGEQ",
+        "nomeCompleto": "Administrador",
+        "redirectUrl": "Cliente e Fornecedor.html"
+    }
+]
