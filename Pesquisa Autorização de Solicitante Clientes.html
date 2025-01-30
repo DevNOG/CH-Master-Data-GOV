@@ -291,7 +291,7 @@
 <body>
     <header>
         <img src="https://chmasterdata.com.br/wp-content/uploads/2024/06/ch.png" alt="Logo CH Master Data">
-        <h1>Painel de Consulta de Autorização de Solicitante (Fornecedor)</h1>
+        <h1>Painel de Consulta de Autorização de Solicitante (Cliente)</h1>
     </header>
 
     <main>
@@ -328,22 +328,43 @@
     <script>
         // Base de dados simulada
         const baseDeDados = [
-            { "Nome": "CAMILO ELANNO SETUBAL RODRIGUES", "Situação": "Não possui email com domínio GEQ, mas confirmado no dia 04/04/24 que faz parte do Grupo (e-mail:camilo.setubal@ictind.com.br)" },
-            { "Nome": "ARLAN FERNANDES VASCONCELOS", "Situação": "PODE ABRIR SOLICITAÇÃO SEM NF PARA ESCRITURAÇÃO" },
-            { "Nome": "DANIELE PEIXOTO DA SILVA", "Situação": "PODE ABRIR SOLICITAÇÃO SEM NF PARA ESCRITURAÇÃO" },
-            { "Nome": "MARIA GLEICIANE LIMA DO NASCIMENTO", "Situação": "PODE ABRIR SOLICITAÇÃO SEM NF PARA ESCRITURAÇÃO" },
-            { "Nome": "Tatiana Gregorio Lima faz", "Situação": "20/01/25: pode abrir solicitação de inclusao e expansao para baixa de NF sem as notas"},
-            { "Nome": "Jéssica Alencar", "Situação": "Faz parte da Equipe de SUPRIMENTOS"},
-            { "Nome": "Aline Mota de Oliveira Rocha", "Situação": "Faz parte da Equipe de SUPRIMENTOS"},
-            { "Nome": "Ana Laryssa Vieira da Silva", "Situação": "Faz parte da Equipe de SUPRIMENTOS"},
-            { "Nome": "Annezia Mary Freire de Lima", "Situação": "Faz parte da Equipe de SUPRIMENTOS"},
-            { "Nome": "Cicera Edna Arruda dos Santos", "Situação": "Faz parte da Equipe de SUPRIMENTOS"},
-            { "Nome": "Leoniza Iris Faustino da Silva", "Situação": "Faz parte da Equipe de SUPRIMENTOS"},
-            { "Nome": "Marcos Lazaro Camelo da Silva", "Situação": "Faz parte da Equipe de SUPRIMENTOS"},
-            { "Nome": "Paulo Victor Gurgel Brauna", "Situação": "Faz parte da Equipe de SUPRIMENTOS"},
-            { "Nome": "Vandecir Freire Filho", "Situação": "Faz parte da Equipe de SUPRIMENTOS"},
+        { "Nome": "ANTONIA TICYANA MARINHO MARTINS ", "Situação": "AUTORIZADO NGD"},
+{ "Nome": "AGLAILSON ALVES VITAL", "Situação": "AUTORIZADO NGD"},
+{ "Nome": "ANA MYKAELE MAIA LOPES", "Situação": "AUTORIZADO NGD"},
+{ "Nome": "ANDRESSA BARBOSA CORDEIRO", "Situação": "AUTORIZADO NGD"},
+{ "Nome": "ANTONIO PESSOA DE ARAUJO NETO", "Situação": "AUTORIZADO NGD"},
+{ "Nome": "BRUNA MARIA VIEIRA BARBOZA", "Situação": "AUTORIZADO NGD"},
+{ "Nome": "ELANNY CRISTINA LOPES", "Situação": "AUTORIZADO NGD"},
+{ "Nome": "ERLES MARTINS DA SILVA", "Situação": "AUTORIZADO NGD"},
+{ "Nome": "GLAYCIANE MARIA COSMO DE OLIVEIRA", "Situação": "AUTORIZADO NGD"},
+{ "Nome": "JOSIANE DE SOUZA ROCHA", "Situação": "AUTORIZADO NGD"},
+{ "Nome": "LUANA LIMA DE MELO ROCHA", "Situação": "AUTORIZADO NGD"},
+{ "Nome": "LUCAS FELIX CORREIA PINTO", "Situação": "AUTORIZADO NGD"},
+{ "Nome": "MICHELE PEREIRA MOREIRA", "Situação": "AUTORIZADO NGD"},
+{ "Nome": "MILLENA MARTINS DE ANDRADE", "Situação": "AUTORIZADO NGD"},
+{ "Nome": "PAULIANE ALEXANDRE FREITAS", "Situação": "AUTORIZADO NGD"},
+{ "Nome": "TAMIRES DOS SANTOS ALVES DUARTE", "Situação": "AUTORIZADO NGD"},
+{ "Nome": "SAMUEL OLIVEIRA DE ALMEIRA", "Situação": "AUTORIZADO NGD - Mudou de setor, dificilemente abrirá solicitação via WBL (usará o sesuite), mas caso abra solicitação, não precisa mais de validação. "},
+{ "Nome": "PEDRO MOREIRA DA SILVA FILHO", "Situação": "AUTORIZADO NGD em 04/05/24"},
+{ "Nome": "MOABE ALVES DA SILVA FILHO", "Situação": "AUTORIZADO NGD em 10/08/24"},
+{ "Nome": "CLAUDIA ROCHA FIGUEIRA", "Situação": "AUTORIZADO NGD em 14/03/24"},
+{ "Nome": "GUILHERME GUTIERREZ SEVERO DE SOUZA", "Situação": "AUTORIZADO NGD em 15/06"},
+{ "Nome": "ESMALTEC CLIENTE", "Situação": "EVITAR CONTATO - VERIFICAR NO CHAT SE OUTRA ANALISTA CONSEGUE AJUDAR NA SUA DÚVIDA. "},
+{ "Nome": "CAMILO ELANNO SETUBAL RODRIGUES  ", "Situação": "Não possui email com domínio GEQ, mas confirmado no dia 04/04/24 que faz parte do Grupo (e-mail:camilo.setubal@ictind.com.br)"},
+{ "Nome": "ADRIANO SILVA DE QUEIROZ", "Situação": "PODE HABILITAR AS LINHAS DA ESMALTEC"},
+{ "Nome": "MATEUS AUGUSTO PINTO VIEIRA", "Situação": "PODE HABILITAR AS LINHAS DA ESMALTEC"},
+{ "Nome": "VIRGILIO ALBUQUERQUE FRANCO", "Situação": "PODE HABILITAR AS LINHAS DA ESMALTEC"},
+{ "Nome": "FERNANDO ANTONIO CARNEIRO DA CUNHA FROTA", "Situação": "VERIFICAR COM GEQ - QUALQUER AMBIENTE"},
+{ "Nome": "MARCOS VENICIOS CRISOSTOMO", "Situação": "VERIFICAR COM GEQ - QUALQUER AMBIENTE"},
+{ "Nome": "EDILBERTO MACHADO RIBEIRO", "Situação": "VERIFICAR COM GEQ - QUALQUER AMBIENTE // SOBRE DN: Solicitante alega não ter. Pode seguir SEM enviar comunicado sobre. O mesmo está ciente. "},
+{ "Nome": "Aleksandro da Silva", "Situação": "13/01: Abrir chamado ANTES DE APROVAR"},
+{ "Nome": "Carlos Rotella", "Situação": "13/01: Abrir chamado ANTES DE APROVAR"},
+{ "Nome": "Maria Dayane de Moraes", "Situação": "AUTORIZADO NGD"},
+{ "Nome": "Edson Levi Cunha Sousa", "Situação": "AUTORIZADO NGD"},
+{ "Nome": "Maria Gabrielle Marinho Ximenes", "Situação": "AUTORIZADO NGD"},
 
-        ]
+
+    ]
         
         function buscarNome() {
     const nomeInput = document.getElementById('cnpj').value.trim().toLowerCase(); // Converte o valor de entrada para minúsculas para busca case-insensitive
